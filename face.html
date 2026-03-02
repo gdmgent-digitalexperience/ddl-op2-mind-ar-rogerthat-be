@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DDL OP 2 - Mind AR Face Tracking</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
+    <link rel="stylesheet" href="./css/main.css">
+  </head>
+  <body>
+    <button id="switch">Switch Model</button>
+    <a-scene
+      mindar-face
+      embedded
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
+      <a-camera active="false" position="0 0 0"></a-camera>
+
+      <a-assets>
+        <a-asset-item id="sunglasses-model" src="./assets/pink_round_sunglasses.glb"></a-asset-item>
+        <a-asset-item id="bunny-ears-model" src="./assets/bunny_ears.glb"></a-asset-item>
+      </a-assets>
+
+      <!-- Sunglasses on nose -->
+      <a-entity mindar-face-target="anchorIndex: 5">
+        <a-gltf-model 
+          id="sunglasses" 
+          src="#sunglasses-model" 
+          position="0 0 -0.2" 
+          rotation="0 0 0" 
+          scale="0.7 0.7 0.7"
+          visible="true">
+        </a-gltf-model>
+      </a-entity>
+
+      <!-- Bunny ears on forehead -->
+      <a-entity mindar-face-target="anchorIndex: 10">
+        <a-gltf-model 
+          id="bunny-ears" 
+          src="#bunny-ears-model" 
+          position="0 0.3 -0.5" 
+          rotation="0 0 0" 
+          scale="0.01 0.01 0.01"
+          visible="false">
+        </a-gltf-model>
+      </a-entity>
+    </a-scene>
+
+    <script>
+      // Stap 1: Zoek de button in de HTML
+      const switchButton = document.querySelector('#switch');
+      
+      // Stap 2: Zoek de twee 3D modellen in de HTML
+      const sunglasses = document.querySelector('#sunglasses');
+      const bunnyEars = document.querySelector('#bunny-ears');
+      
+      // Stap 3: Bijhouden welk model momenteel zichtbaar is
+      let showingSunglasses = true;
+      
+      // Stap 4: Functie om te wisselen tussen modellen
+      function switchModel() {
+        if (showingSunglasses) {
+          // Als zonnebril zichtbaar is, toon dan bunny ears
+          sunglasses.setAttribute('visible', 'false');
+          bunnyEars.setAttribute('visible', 'true');
+          switchButton.textContent = 'Switch to Sunglasses';
+          showingSunglasses = false;
+        } else {
+          // Als bunny ears zichtbaar zijn, toon dan zonnebril
+          sunglasses.setAttribute('visible', 'true');
+          bunnyEars.setAttribute('visible', 'false');
+          switchButton.textContent = 'Switch to Bunny Ears';
+          showingSunglasses = true;
+        }
+      }
+      
+      // Stap 5: Luister naar klikken op de button
+      switchButton.addEventListener('click', switchModel);
+    </script>
+  </body>
+</html>
